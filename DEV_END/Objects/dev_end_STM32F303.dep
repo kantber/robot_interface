@@ -1,0 +1,4 @@
+Dependencies for Project 'dev_end', Target 'STM32F303': (DO NOT MODIFY !)
+CompilerVersion: 6190000::V6.19::ARMCLANG
+F (C:/Users/User/AppData/Local/Arm/Packs/Keil/STM32F3xx_DFP/2.2.2/CMSIS/Driver/UART_STM32F3xx.c)(0x5FC08826)()
+F (C:/Users/User/AppData/Local/Arm/Packs/Keil/STM32F3xx_DFP/2.2.2/MDK/CubeMX/run_STM32CubeMX.c)(0x60F9266A)()
