@@ -1,4 +1,4 @@
-package devices;
+package desktop.devices;
 
 public class Display {
 }

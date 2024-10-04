@@ -1,4 +1,4 @@
-package devices.interfaces;
+package desktop.devices.interfaces;
 
 public interface IEngine extends IDevice {
     public void init();

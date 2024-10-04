@@ -1,0 +1,45 @@
+{
+  "board_id": 303,
+  "board_type": "STM32F303",
+  "devices": [
+    {
+      "id": 1,
+      "type": "ENGINE",
+      "subtype": "STEPPER",
+      "steps": 1000,
+      "sps": 6,
+      "aps": 3,
+      "pins": [
+        {
+          "name": "PUL",
+          "pin": "PE0",
+          "io": "OUTPUT"
+        },
+        {
+          "name": "DIR",
+          "pin": "PE1",
+          "io": "OUTPUT"
+        },
+        {
+          "name": "ENA",
+          "pin": "PE2",
+          "io": "OUTPUT"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "LED",
+      "color": "RED",
+      "state": "OFF",
+      "pins": [
+        {
+          "name": "RED_LED",
+          "pin": "PE13",
+          "io": "OUTPUT"
+
+        }
+      ]
+    }
+  ]
+}

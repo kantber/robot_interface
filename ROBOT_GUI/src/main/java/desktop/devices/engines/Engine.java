@@ -1,21 +1,24 @@
-package devices.engines;
+package desktop.devices.engines;
 
-import devices.Device;
-import devices.interfaces.IEngine;
+import desktop.devices.Device;
+import desktop.devices.interfaces.IEngine;
+import lombok.Getter;
 
 public abstract class Engine extends Device implements IEngine {
 
     Double v;
     Double a;
 
-    public Engine(EngineType type) {
+    @Getter
+    EngineType type;
+
+    public Engine() {
         super();
         v = 0.0;
         a = 0.0;
     }
 
-    public Engine(EngineType type, String channel) {
-        this(type);
+    public Engine(String channel) {
         this.setChannel(channel);
     }
 

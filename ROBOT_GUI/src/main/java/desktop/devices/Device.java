@@ -1,12 +1,17 @@
-package devices;
+package desktop.devices;
 
-import devices.interfaces.IDevice;
+import desktop.devices.interfaces.IDevice;
 
-public class Device implements IDevice {
+import java.util.List;
+
+public abstract class Device implements IDevice {
     //class
     private static Integer device_count = 0;  // Общая переменная для всех объектов
 
     //object
+    List<Pin> pins;
+
+
     private final Integer id;
     private String channel;
 
@@ -18,6 +23,19 @@ public class Device implements IDevice {
     public Device(String channel) {
         this();
         this.channel = channel;
+    }
+
+    @Override
+    public Integer getId() { return this.id; }
+
+    @Override
+    public List<Pin> getPins() {
+        return this.pins;
+    }
+
+    @Override
+    public void addPin(Pin pin) {
+        this.pins.add(pin);
     }
 
     @Override

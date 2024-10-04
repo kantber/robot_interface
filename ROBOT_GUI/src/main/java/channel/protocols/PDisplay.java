@@ -1,4 +1,4 @@
-package protocols;
+package channel.protocols;
 
 public class PDisplay {
 }

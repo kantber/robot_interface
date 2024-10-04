@@ -1,4 +1,4 @@
-package devices.engines;
+package desktop.devices.engines;
 
 public enum EngineType {
     STEPPER,
