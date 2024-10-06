@@ -27,10 +27,10 @@ public class COMModel{
     private Integer baudrate; //Скорость COM-порта (пока никак не используется)
 
     @Getter
-    private List<Byte> rx; //Буфер приема
+    private Deque<Byte> rx; //Буфер приема
 
     @Getter
-    private List<Byte> tx; //Буфер передачи
+    private Deque<Byte> tx; //Буфер передачи
 
     @Getter
     private final ConnectorTX connectorTx = new ConnectorTX(this);    //Подключение к одному концу моделируемого канала
@@ -42,8 +42,8 @@ public class COMModel{
         COMModel.id++;
         this.name = "COM" + COMModel.id;
         this.baudrate = 115200;
-        this.rx = new ArrayList<Byte>();
-        this.tx = new ArrayList<Byte>();
+        this.rx = new ArrayDeque<Byte>();
+        this.tx = new ArrayDeque<Byte>();
     }
 
     public Connector getConnector() throws NoConnectorException {
@@ -114,7 +114,7 @@ public class COMModel{
 
         @Override
         public void sendByte(Byte b) {
-            channel.tx.add(b); //передача байта по каналу TX
+            channel.tx.addLast(b); //передача байта по каналу TX
         }
 
         @Override
@@ -124,17 +124,19 @@ public class COMModel{
 
         @Override
         public Byte getByte() {
-            return channel.rx.get(prx); //получение байта по указателю чтения
+            //return channel.rx.get(prx); //получение байта по указателю чтения
+            return (byte)0x00;
         }
 
         @Override
         public Byte getNext() {
-            return channel.rx.getFirst(); //получение первого байта из приемного буфера (RX)
+            return channel.rx.pop(); //получение первого байта из приемного буфера (RX)
         }
 
         @Override
         public void clearRx() {
-            channel.rx = new ArrayList<Byte>(); //очистка приемного буфера (RX)
+            channel.rx = new ArrayDeque<Byte>() {
+            }; //очистка приемного буфера (RX)
         }
 
         @Override
@@ -164,7 +166,7 @@ public class COMModel{
 
         @Override
         public void sendByte(Byte b) {
-            channel.rx.add(b); //передача байта по каналу RX
+            channel.rx.addLast(b); //передача байта по каналу RX
         }
 
         @Override
@@ -174,12 +176,13 @@ public class COMModel{
 
         @Override
         public Byte getByte() {
-            return channel.tx.get(prx); //получение байта по указателю чтения
+            //return channel.tx.get(prx); //получение байта по указателю чтения
+            return (byte)0x00;
         }
 
         @Override
         public Byte getNext() {
-            return channel.tx.getFirst(); //получение первого байта из приемного буфера (TX)
+            return channel.tx.pop(); //получение первого байта из приемного буфера (TX)
         }
 
         @Override
@@ -189,7 +192,7 @@ public class COMModel{
 
         @Override
         public void clearRx() {
-            channel.tx = new ArrayList<Byte>(); //очистка приемного буфера (TX)
+            channel.tx = new ArrayDeque<Byte>(); //очистка приемного буфера (TX)
         }
 
         @Override

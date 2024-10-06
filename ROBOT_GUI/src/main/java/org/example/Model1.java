@@ -36,11 +36,14 @@ public class Model1 {
         pcConnector.sendByte(b);
         System.out.printf("Коннектор %s отправил байт %s%n", pcConnector.getName(), String.format("%02X", b));
         Byte receive = stmConnector.getNext();
-        System.out.printf("Коннектор %s принял байт %s%n", stmConnector.getName(), String.format("%02X", receive));
+        System.out.printf("Коннектор %s принял байт %s%n%n", stmConnector.getName(), String.format("%02X", receive));
     }
 
     public void sendByteToPc(Byte b) {
-
+        stmConnector.sendByte(b);
+        System.out.printf("Коннектор %s отправил байт %s%n", stmConnector.getName(), String.format("%02X", b));
+        Byte receive = pcConnector.getNext();
+        System.out.printf("Коннектор %s принял байт %s%n%n", pcConnector.getName(), String.format("%02X", receive));
     }
 
     public void loopBackByte(Byte b) {
