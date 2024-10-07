@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.EOFException;
+import java.math.BigInteger;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class COMModel{
 
@@ -58,6 +61,20 @@ public class COMModel{
                 "\tname     " + name + "\n" +
                 "\tbaudrate " + baudrate + "\n" +
                 "}\n";
+    }
+
+    public static List<Byte> mesToFrame(String message) {
+        return Arrays
+                .stream(message.split(" "))
+                .map((String s) -> (byte)Integer.parseInt(s, 16))
+                .toList();
+    }
+
+    public static String frameToMes(List<Byte> frame) {
+        return frame
+                .stream()
+                .map((b) -> String.format("%02X", b))
+                .collect(Collectors.joining(" ")).trim();
     }
 
     private abstract class BaseConnector implements Connector {
