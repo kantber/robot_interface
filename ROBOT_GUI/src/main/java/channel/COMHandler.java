@@ -33,6 +33,9 @@ public class COMHandler implements Runnable {
     @Setter
     private volatile boolean run = false; // volatile гарантирует, что изменение этой переменной будут видны в других потоках
 
+    static final String linkOk  = "C0 3D 01 FD C1";
+    static final String linkErr = "C0 3D 01 FC C0";
+
     public COMHandler(COMModel com, String name) {
         this.com = com;
         this.name = name;
@@ -59,7 +62,12 @@ public class COMHandler implements Runnable {
                     byte b = connector.getNext();   // Считать принятый байт
                     this.writePHLog(String.format("%s:  <-   %s%n", this.name, String.format("%02X", b))); // лог
                     if (phlParser.parse(b)) {
-                        this.writePHLog("Фрейм успешно принят\n");
+                        this.writePHLog(String.format("Фрейм успешно принят %s\n", phlParser.getFrame().toString()));
+                        if (phlParser.getFrame().getData().get(0) == (byte)0xFF) {
+                            this.sendMessage(linkOk);
+                        } else {
+                            this.sendMessage(linkErr);
+                        }
                     }
                 }
                 if (txBuf.size() != 0) { // Если есть данные на передачу - отправляем их тут

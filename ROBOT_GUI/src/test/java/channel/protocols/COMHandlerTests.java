@@ -25,7 +25,7 @@ public class COMHandlerTests {
             Thread.sleep(300);  // Даем время на инициализацию канала связи
             pcCOMHandler.sendMessage(linkReq);
             Thread.sleep(300);  // Даем время на отправку сообщения
-            stmCOMHandler.sendMessage(linkOk);
+            stmCOMHandler.sendMessage(linkReq);
             Thread.sleep(3000); // Даем поработать модели 3 секунды
         } catch (Exception e) {
             Thread.currentThread().interrupt();

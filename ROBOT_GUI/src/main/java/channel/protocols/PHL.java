@@ -1,6 +1,7 @@
 package channel.protocols;
 
 import channel.datas.PHLData;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Deque;
@@ -22,6 +23,7 @@ public class PHL {
     @Setter
     private String name;
 
+    @Getter
     private PHLData frame;  // Фрейм данных
 
     public PHL() {
