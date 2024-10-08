@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.EOFException;
-import java.math.BigInteger;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,10 +30,10 @@ public class COMModel{
     private Integer baudrate; //Скорость COM-порта (пока никак не используется)
 
     @Getter
-    private Deque<Byte> rx; //Буфер приема
+    private ConcurrentLinkedDeque<Byte> rx; //Буфер приема
 
     @Getter
-    private Deque<Byte> tx; //Буфер передачи
+    private ConcurrentLinkedDeque<Byte> tx; //Буфер передачи
 
     @Getter
     private final ConnectorTX connectorTx = new ConnectorTX(this);    //Подключение к одному концу моделируемого канала
@@ -45,8 +45,8 @@ public class COMModel{
         COMModel.id++;
         this.name = "COM" + COMModel.id;
         this.baudrate = 115200;
-        this.rx = new ArrayDeque<Byte>();
-        this.tx = new ArrayDeque<Byte>();
+        this.rx = new ConcurrentLinkedDeque<>();
+        this.tx = new ConcurrentLinkedDeque<>();
     }
 
     public Connector getConnector() throws NoConnectorException {
@@ -83,9 +83,12 @@ public class COMModel{
         private boolean open = false;
         protected Integer prx = 0;    //Указатель чтения
         @Getter
-        @Setter
         private String name;
 
+        @Override
+        public void setName(String name) {
+            this.name = String.format("Connector '%s'", name);
+        }
 
         @Override
         public boolean openConnector() {
@@ -135,8 +138,8 @@ public class COMModel{
         }
 
         @Override
-        public void sendFrame(String frame) {
-
+        public void sendFrame(String mes) {
+            COMModel.mesToFrame(mes).forEach((b) -> channel.tx.addLast(b));
         }
 
         @Override
@@ -152,8 +155,7 @@ public class COMModel{
 
         @Override
         public void clearRx() {
-            channel.rx = new ArrayDeque<Byte>() {
-            }; //очистка приемного буфера (RX)
+            channel.rx = new ConcurrentLinkedDeque<>(); //очистка приемного буфера (RX)
         }
 
         @Override
@@ -187,8 +189,8 @@ public class COMModel{
         }
 
         @Override
-        public void sendFrame(String frame) {
-
+        public void sendFrame(String mes) {
+            COMModel.mesToFrame(mes).forEach((b) -> channel.rx.addLast(b));
         }
 
         @Override
@@ -209,7 +211,7 @@ public class COMModel{
 
         @Override
         public void clearRx() {
-            channel.tx = new ArrayDeque<Byte>(); //очистка приемного буфера (TX)
+            channel.tx = new ConcurrentLinkedDeque<>(); //очистка приемного буфера (TX)
         }
 
         @Override
