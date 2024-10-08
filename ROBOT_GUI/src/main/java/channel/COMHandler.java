@@ -21,8 +21,6 @@ public class COMHandler implements Runnable {
 
     private String name;            // Имя устройства
 
-    private ConcurrentLinkedDeque<Byte> rxBuf;      // Буфер для принятых данных
-
     private ConcurrentLinkedDeque<Byte> txBuf;      // Буфер для передаваемых дынных
 
     private static ReentrantLock lock = new ReentrantLock(); // Семафор для вывода логов
@@ -38,10 +36,10 @@ public class COMHandler implements Runnable {
     public COMHandler(COMModel com, String name) {
         this.com = com;
         this.name = name;
-        rxBuf = new ConcurrentLinkedDeque<>(); // Инициализация приемного буфера
         txBuf = new ConcurrentLinkedDeque<>(); // Инициализация буфера на передачу
         PHLogPath = String.format("log/%s.log", this.name);  // Создание пути до файла с логом физического уровня
         phlParser = new PHL(); // Пока что прибьем это тут гвоздями
+        phlParser.setName(this.name);
     }
 
     @Override
@@ -60,8 +58,9 @@ public class COMHandler implements Runnable {
                 if (connector.isData()) {   // Если в приемнике есть данные
                     byte b = connector.getNext();   // Считать принятый байт
                     this.writePHLog(String.format("%s:  <-   %s%n", this.name, String.format("%02X", b))); // лог
-                    rxBuf.addLast(b); // Пишем данные в буфер
-                    phlParser.parse();
+                    if (phlParser.parse(b)) {
+                        this.writePHLog("Фрейм успешно принят\n");
+                    }
                 }
                 if (txBuf.size() != 0) { // Если есть данные на передачу - отправляем их тут
                     byte b = txBuf.pop();

@@ -5,9 +5,9 @@ import channel.COMModel;
 import org.junit.Test;
 
 public class COMHandlerTests {
-    static final String linkReq = "C0 3C 12 01 FF FF";
-    static final String linkOk  = "C0 3D 02 01 FD FD";
-    static final String linkErr = "C0 3D 02 01 FC FC";
+    static final String linkReq = "C0 3C 01 FF C2";
+    static final String linkOk  = "C0 3D 01 FD C1";
+    static final String linkErr = "C0 3D 01 FC C0";
 
     @Test
     public void testChannelExchange() {
