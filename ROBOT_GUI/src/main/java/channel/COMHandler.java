@@ -1,5 +1,6 @@
 package channel;
 
+import channel.protocols.PHL;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +29,8 @@ public class COMHandler implements Runnable {
 
     private String PHLogPath;
 
+    private PHL phlParser;  // Парсер физического уровня
+
     @Getter
     @Setter
     private volatile boolean run = false; // volatile гарантирует, что изменение этой переменной будут видны в других потоках
@@ -38,6 +41,7 @@ public class COMHandler implements Runnable {
         rxBuf = new ConcurrentLinkedDeque<>(); // Инициализация приемного буфера
         txBuf = new ConcurrentLinkedDeque<>(); // Инициализация буфера на передачу
         PHLogPath = String.format("log/%s.log", this.name);  // Создание пути до файла с логом физического уровня
+        phlParser = new PHL(); // Пока что прибьем это тут гвоздями
     }
 
     @Override
@@ -57,7 +61,7 @@ public class COMHandler implements Runnable {
                     byte b = connector.getNext();   // Считать принятый байт
                     this.writePHLog(String.format("%s:  <-   %s%n", this.name, String.format("%02X", b))); // лог
                     rxBuf.addLast(b); // Пишем данные в буфер
-                    // Здесь должен быть парсер посылок
+                    phlParser.parse();
                 }
                 if (txBuf.size() != 0) { // Если есть данные на передачу - отправляем их тут
                     byte b = txBuf.pop();
